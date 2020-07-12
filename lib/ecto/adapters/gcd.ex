@@ -246,13 +246,14 @@ defmodule Ecto.Adapters.Gcd do
     # todo: Force google api to use Jason somehow
     # todo: Harden security of Tesla the underlying http client
     # todo[IMPORTANT]: Rollback transaction if some error happens
-    with  entity <- build_entity(schema, fields, datastore_project_id),
+    with  {:ok, entity} <- build_entity(schema, fields, datastore_project_id),
           {:ok, goth_token} <- Goth.Token.for_scope(@datastore_auth_scope),
           conn <- Connection.new(goth_token.token),
           {
             :ok,
             %Model.BeginTransactionResponse{transaction: transaction}
           } <- Api.Projects.datastore_projects_begin_transaction(conn, datastore_project_id),
+          Logger.debug("transaction: #{inspect transaction}"),
           {:ok, response} <- Api.Projects.datastore_projects_commit(
             conn,
             datastore_project_id,
