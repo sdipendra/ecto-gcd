@@ -1,6 +1,6 @@
 # EctoGcd
 
-**TODO: Add description**
+**Ecto adapter for Google Cloud Datastore**
 
 ## Installation
 
